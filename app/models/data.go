@@ -1,15 +1,13 @@
 package models
 
 import (
-	gohtml "code.google.com/p/go.net/html"
-	"code.google.com/p/go.net/html/atom"
 	"encoding/xml"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/mjibson/goread/goapp/rss"
 	"html"
 	"net/http"
 	"regexp"
-	"strings"
 	"sync"
 	"time"
 )
@@ -81,57 +79,14 @@ func getCurrentAvailability() {
 }
 
 func getAvailability(movie *Movie, done chan bool) {
-	doc := scrape(movie)
-	process(movie, doc)
+	url := "http://www.canistream.it/external/imdb/" + movie.Imdb
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		panic(err)
+	}
+
+	movie.Stream = doc.Find("#streaming > ul > li.available").Length() > 0
+	movie.Rent = doc.Find("#rental > ul > li.available").Length() > 0
+	movie.Buy = doc.Find("#purchase > ul > li.available").Length() > 0 || doc.Find("#dvd > ul > li.available").Length() > 0
 	done <- true
-}
-
-func scrape(movie *Movie) *gohtml.Node {
-	response, err := http.Get("http://www.canistream.it/external/imdb/" + movie.Imdb)
-	if err != nil {
-		panic(err)
-	}
-	defer response.Body.Close()
-	doc, err := gohtml.Parse(response.Body)
-	if err != nil {
-		panic(err)
-	}
-	return doc
-}
-
-func process(movie *Movie, n *gohtml.Node) {
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.DataAtom == atom.Div && c.Attr[0].Key == "id" {
-			if c.Attr[0].Val == "streaming" {
-				movie.Stream = includesAvailableClass(c)
-				continue
-			}
-			if c.Attr[0].Val == "rental" {
-				movie.Rent = includesAvailableClass(c)
-				continue
-			}
-			if c.Attr[0].Val == "purchase" || c.Attr[0].Val == "dvd" {
-				movie.Buy = includesAvailableClass(c)
-				continue
-			}
-		}
-		process(movie, c)
-		movie.Any = movie.Stream || movie.Rent || movie.Buy
-	}
-}
-
-func includesAvailableClass(n *gohtml.Node) bool {
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.DataAtom == atom.Ul {
-			for l := c.FirstChild; l != nil; l = l.NextSibling {
-				if l.DataAtom == atom.Li && l.Attr[0].Key == "class" && l.Attr[0].Val != "none-avail" {
-					data := strings.Split(l.Attr[0].Val, " ")
-					if data[1] == "available" {
-						return true
-					}
-				}
-			}
-		}
-	}
-	return false
 }
