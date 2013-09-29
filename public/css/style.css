@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Pathway Gothic One';
+  font-style: normal;
+  font-weight: 400;
+}
+body {
+  min-height: 1000px;
+  padding-bottom: 1em;
+}
+a {
+	color: #004080;
+}
+h1 {
+	font-family: 'Pathway Gothic One';
+}
+h2 {
+	font-family: 'Pathway Gothic One';
+}
+header p {
+	color: #ddd !important;
+}
+.jumbotron {
+	background-color: #33516e;
+	color: #fff;
+}
+.title {
+	font-weight: bold;
+	font-size: 1.3em;
+}

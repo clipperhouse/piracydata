@@ -1,0 +1,62 @@
+{{set . "title" "piracydata.org"}}
+{{template "header.html" .}}
+
+<section class="container">
+    <div class="span6">
+      {{template "flash.html" .}}
+    </div>
+  <p class="lead">Do people turn to piracy when the movies they want to watch are not available legally? We're building a dataset to help answer that question. Here are last week's most-pirated movies and their availability:</p>
+    <div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Title</th>
+					<th>Availability</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{range .week.Movies}}
+					<tr>
+						<th>{{.Rank}}.</th>
+						<td><span class="title {{if .Any}}text-success{{else}}text-danger{{end}}">{{.Title}}</span></td>
+						<td>
+							<span class="{{if eq .Stream true}}text-success{{else}}text-danger{{end}}">Stream</span> 
+							<span class="text-muted">&bull;</span> 
+							<span class="{{if eq .Rent true}}text-success{{else}}text-danger{{end}}">Rent</span> 
+							<span class="text-muted">&bull;</span> 
+							<span class="{{if eq .Buy true}}text-success{{else}}text-danger{{end}}">Buy</span>
+						</td>
+					</tr>
+				{{end}}
+			</tbody>
+		</table>
+	</div>					
+  <small>{{ .week.Name }}. Source: <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> and <a href="http://www.canistream.it/">Can I Stream It</a>.</small>
+		
+</section> <!-- /container -->
+
+<br /><br />
+<section class="jumbotron">
+	
+	<h2 class="text-center">Over the past 52 weeks, only <span class="text-danger">33%</span> of the most-pirated movies have been available legally in digital form.</h2> 
+	
+	<hr>
+			
+	<h2 class="text-center">Over the same period, only <span class="text-danger">18%</span> have been available for rental or streaming.</h2> <!-- The word "only" needs to be conditional on the percentage (under 50%) -->
+	
+	<hr>
+	
+	<h2 class="text-center">In addition, only <span class="text-danger">6%</span> have been available on a legal streaming service.</h2> 
+	
+</section>
+<section class="container">
+	<div id='chart_div'></div>
+    <p class="lead text-center">The chart above shows the legal availability of the most pirated movies over the past XX weeks.</p>
+	<hr />
+	<p><strong>Methodology:</strong> The way we develop this data set is very simple. We take the top 10 most pirated movies on BitTorrent as reported by <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> each Monday. Then we look up whether each movie is available in a legal digital format using the <a href="http://www.canistream.it/">Can I Stream It</a> service. We display the most recent week's data in the table above, but the entire data set, with fine-grained service availability, is available for download.</p>
+	<br />
+    <p class="lead text-center"><a href="/data.csv"><button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-cloud-download"></span> Download raw data</button></a></p>
+	<br />
+</section>
+{{template "footer.html" .}}
