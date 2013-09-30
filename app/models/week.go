@@ -1,12 +1,8 @@
 package models
 
 type Week struct {
-	Movies []Movie
-	Name   string
-	Stats  WeekStats
-}
-
-type WeekStats struct { // Number of movies that are available in each format
+	Movies    []Movie
+	Name      string
 	Streaming int
 	Rental    int
 	Purchase  int

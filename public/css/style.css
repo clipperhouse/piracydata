@@ -27,3 +27,7 @@ header p {
 	font-weight: bold;
 	font-size: 1.3em;
 }
+.available-indicator {
+	max-width: 30px;
+	text-align: center;
+}
