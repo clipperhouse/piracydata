@@ -6,8 +6,9 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mjibson/goread/goapp/rss"
 	"html"
+	"log"
 	"net/http"
-	"regexp"
+	"strings"
 	"sync"
 	"time"
 )
@@ -34,8 +35,6 @@ func AwaitData() {
 }
 
 var url string = "http://torrentfreak.com/category/dvdrip/feed/"
-var titleRegex = regexp.MustCompile("<a href=\"http://www.(rottentomatoes.com|pnop.com|filmtied.com)/(.+)\">(.+)</a>")
-var imdbRegex = regexp.MustCompile("<a href=\"http://www.imdb.com/title/([t\\d]+)[\\?/]+\">[\\d\\.\\?]+</a>")
 
 const layout = "Jan 2, 2006"
 
@@ -55,14 +54,19 @@ func getCurrentMovies() {
 	}
 
 	content := html.UnescapeString(firstItem.Content)
-	titles := titleRegex.FindAllStringSubmatch(content, -1)
-	imdbs := imdbRegex.FindAllStringSubmatch(content, -1)
-
-	movies := make([]Movie, len(titles))
-
-	for j, _ := range titles {
-		movies[j] = Movie{Title: titles[j][3], Imdb: imdbs[j][1], Rank: j + 1, Week: currentWeek.Name}
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
+	if err != nil {
+		log.Println(err)
 	}
+	rows := doc.Find("tbody > tr")
+	movies := make([]Movie, rows.Length())
+
+	rows.Each(func(i int, s *goquery.Selection) {
+		title := s.Find("td").Eq(2).Find("a").Text()
+		imdbUrl, _ := s.Find("a[href^=\"http://www.imdb.com/title\"]").First().Attr("href")
+		imdb := strings.Split(imdbUrl, "/")[4]
+		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Name}
+	})
 
 	currentWeek.Movies = movies
 	CurrentWeek = currentWeek
