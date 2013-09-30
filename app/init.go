@@ -23,9 +23,13 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
-		jobs.Now(fetchAll)
-		jobs.Every(1*time.Hour, fetchAll)
+		jobs.Now(update)
+		jobs.Every(1*time.Hour, update)
 	})
 }
 
-var fetchAll = jobs.Func(models.FetchAll)
+var update = jobs.Func(updateCache)
+
+func updateCache() {
+	models.FetchAll()
+}

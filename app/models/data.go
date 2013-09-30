@@ -109,7 +109,7 @@ func getAvailability(movie *Movie, done chan bool) {
 			} else {
 				movie.Services[data[1]] = false
 			}
-//			fmt.Println(data[0] + data[1])
+			//			fmt.Println(data[0] + data[1])
 		}
 	})
 	/*
@@ -134,19 +134,19 @@ func summarizeWeek(week *Week) {
 	var streaming, rental, purchase, dvd, all int
 	for m := range week.Movies {
 		if week.Movies[m].Streaming > 0 {
-			streaming +=1
+			streaming += 1
 		}
 		if week.Movies[m].Rental > 0 {
-			rental +=1
+			rental += 1
 		}
 		if week.Movies[m].Purchase > 0 {
-			purchase +=1
+			purchase += 1
 		}
 		if week.Movies[m].DVD > 0 {
-			dvd +=1
+			dvd += 1
 		}
 		if week.Movies[m].All > 0 {
-			all +=1
+			all += 1
 		}
 	}
 	week.Streaming = streaming
