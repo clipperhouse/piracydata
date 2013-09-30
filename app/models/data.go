@@ -97,9 +97,6 @@ func getAvailability(movie *Movie, done chan bool) {
 	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
 
 	servicelist := doc.Find("#streaming > ul > li").Add("#rental > ul > li").Add("#purchase > ul > li").Add("#dvd > ul > li")
-	//	rentallist := doc.Find("#rental > ul > li")
-	//	purchaselist := doc.Find("#purchase > ul > li")
-	//	dvdlist := doc.Find("#dvd > ul > li")
 	_ = servicelist.Each(func(i int, s *goquery.Selection) {
 		class, exists := s.Attr("class")
 		if class != "none-avail" && exists {
@@ -109,23 +106,8 @@ func getAvailability(movie *Movie, done chan bool) {
 			} else {
 				movie.Services[data[1]] = false
 			}
-			//			fmt.Println(data[0] + data[1])
 		}
 	})
-	/*
-	   	for i := 0; i < streaminglist.Length(); i++ {
-	   		l := streaminglist.Get(i)
-	   		if l.DataAtom == atom.Li && l.Attr[0].Key == "class" && l.Attr[0].Val != "none-avail" {
-	   			data := strings.Split(l.Attr[0].Val, " ")
-	   			if data[1] == "available" {
-	   				movie.Services[data[0]] = true
-	   			} else {
-	   				movie.Services[data[0]] = false
-	   			}
-	   //			fmt.Println(data[0] + data[1])
-	   		}
-	   	}
-	*/
 
 	done <- true
 }
