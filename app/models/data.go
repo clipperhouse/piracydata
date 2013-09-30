@@ -92,5 +92,6 @@ func getAvailability(movie *Movie, done chan bool) {
 	movie.Stream = doc.Find("#streaming > ul > li.available").Length() > 0
 	movie.Rent = doc.Find("#rental > ul > li.available").Length() > 0
 	movie.Buy = doc.Find("#purchase > ul > li.available").Length() > 0 || doc.Find("#dvd > ul > li.available").Length() > 0
+	movie.Any = movie.Stream || movie.Rent || movie.Buy
 	done <- true
 }
