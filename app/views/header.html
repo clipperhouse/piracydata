@@ -23,14 +23,13 @@
         var data = google.visualization.arrayToDataTable([
           ['Week', 'Streaming', 'Rental', 'Purchase', 'Total Availability'],
 		  // the data below is only for the more recent week. we need to expose a slice of weeks.
-		  ['{{.week.Name}}',{{.week.Stats.Streaming}},{{.week.Stats.Rental}},{{.week.Stats.Purchase}},{{.week.Stats.All}}],
+		  ['{{.week.Name}}',{{.week.Streaming}},{{.week.Rental}},{{.week.Purchase}},{{.week.All}}],
 		  ]);
 
         var options = {
 //          title: 'Availability of the Top 10 Most Pirated Movies',
 		  height: 500,
           vAxis: {title: "Number of Movies", maxValue:10, gridlines:{count:6}},
-          hAxis: {title: "Week"},
           seriesType: "bars",
           series: {3: {type: "line"}}
         };

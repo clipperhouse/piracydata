@@ -23,6 +23,7 @@ func FetchAll() {
 	fmt.Println("Starting FetchAll")
 	getCurrentMovies()
 	getCurrentAvailability()
+	summarizeWeek(&CurrentWeek)
 	onComplete <- true
 }
 
@@ -65,7 +66,7 @@ func getCurrentMovies() {
 		title := s.Find("td").Eq(2).Find("a").Text()
 		imdbUrl, _ := s.Find("a[href^=\"http://www.imdb.com/title\"]").First().Attr("href")
 		imdb := strings.Split(imdbUrl, "/")[4]
-		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Name}
+		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Name, Services: make(map[string]bool)}
 	})
 
 	currentWeek.Movies = movies
@@ -89,9 +90,50 @@ func getAvailability(movie *Movie, done chan bool) {
 		panic(err)
 	}
 
-	movie.Stream = doc.Find("#streaming > ul > li.available").Length() > 0
-	movie.Rent = doc.Find("#rental > ul > li.available").Length() > 0
-	movie.Buy = doc.Find("#purchase > ul > li.available").Length() > 0 || doc.Find("#dvd > ul > li.available").Length() > 0
-	movie.Any = movie.Stream || movie.Rent || movie.Buy
+	movie.Streaming = doc.Find("#streaming > ul > li.available").Length()
+	movie.Rental = doc.Find("#rental > ul > li.available").Length()
+	movie.Purchase = doc.Find("#purchase > ul > li.available").Length()
+	movie.DVD = doc.Find("#dvd > ul > li.available").Length()
+	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
+
+	servicelist := doc.Find("#streaming > ul > li").Add("#rental > ul > li").Add("#purchase > ul > li").Add("#dvd > ul > li")
+	_ = servicelist.Each(func(i int, s *goquery.Selection) {
+		class, exists := s.Attr("class")
+		if class != "none-avail" && exists {
+			data := strings.Split(class, " ")
+			if data[1] == "available" {
+				movie.Services[data[0]] = true
+			} else {
+				movie.Services[data[1]] = false
+			}
+		}
+	})
+
 	done <- true
+}
+
+func summarizeWeek(week *Week) {
+	var streaming, rental, purchase, dvd, all int
+	for m := range week.Movies {
+		if week.Movies[m].Streaming > 0 {
+			streaming += 1
+		}
+		if week.Movies[m].Rental > 0 {
+			rental += 1
+		}
+		if week.Movies[m].Purchase > 0 {
+			purchase += 1
+		}
+		if week.Movies[m].DVD > 0 {
+			dvd += 1
+		}
+		if week.Movies[m].All > 0 {
+			all += 1
+		}
+	}
+	week.Streaming = streaming
+	week.Rental = rental
+	week.Purchase = purchase
+	week.DVD = dvd
+	week.All = all
 }

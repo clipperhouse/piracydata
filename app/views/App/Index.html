@@ -12,21 +12,19 @@
 				<tr>
 					<th></th>
 					<th>Title</th>
-					<th>Availability</th>
+					<th class="available-indicator">Streaming</th>
+					<th class="available-indicator">Digital<br />Rental</th>
+					<th class="available-indicator">Digital<br />Purchase</th>
 				</tr>
 			</thead>
 			<tbody>
 				{{range .week.Movies}}
 					<tr>
 						<th>{{.Rank}}.</th>
-						<td><span class="title {{if .Any}}text-success{{else}}text-danger{{end}}">{{.Title}}</span></td>
-						<td>
-							<span class="{{if eq .Stream true}}text-success{{else}}text-danger{{end}}">Stream</span> 
-							<span class="text-muted">&bull;</span> 
-							<span class="{{if eq .Rent true}}text-success{{else}}text-danger{{end}}">Rent</span> 
-							<span class="text-muted">&bull;</span> 
-							<span class="{{if eq .Buy true}}text-success{{else}}text-danger{{end}}">Buy</span>
-						</td>
+						<td><span class="title {{if .All}}text-success{{else}}text-danger{{end}}">{{.Title}}</span></td>
+						<td class="available-indicator"><span class="{{if .Streaming}}text-success{{else}}text-danger{{end}}">{{if .Streaming}}<span class="glyphicon glyphicon-ok"></span>{{else}}<span class="glyphicon glyphicon-remove"></span>{{end}}</span></td>
+						<td class="available-indicator"><span class="{{if .Rental}}text-success{{else}}text-danger{{end}}">{{if .Rental}}<span class="glyphicon glyphicon-ok"></span>{{else}}<span class="glyphicon glyphicon-remove"></span>{{end}}</span></td>
+						<td class="available-indicator"><span class="{{if .Purchase}}text-success{{else}}text-danger{{end}}">{{if .Purchase}}<span class="glyphicon glyphicon-ok"></span>{{else}}<span class="glyphicon glyphicon-remove"></span>{{end}}</span></td>
 					</tr>
 				{{end}}
 			</tbody>
@@ -51,8 +49,8 @@
 	
 </section>
 <section class="container">
+    <p class="lead text-center">The chart below shows the legal availability of the most pirated movies over the past XX weeks.</p>
 	<div id='chart_div'></div>
-    <p class="lead text-center">The chart above shows the legal availability of the most pirated movies over the past XX weeks.</p>
 	<hr />
 	<p><strong>Methodology:</strong> The way we develop this data set is very simple. We take the top 10 most pirated movies on BitTorrent as reported by <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> each Monday. Then we look up whether each movie is available in a legal digital format using the <a href="http://www.canistream.it/">Can I Stream It</a> service. We display the most recent week's data in the table above, but the entire data set, with fine-grained service availability, is available for download.</p>
 	<br />

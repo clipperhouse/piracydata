@@ -14,3 +14,10 @@ func (c App) Index() revel.Result {
 	week := models.CurrentWeek
 	return c.Render(week)
 }
+
+func (c App) Csv() revel.Result {
+	models.AwaitData()
+	week := models.CurrentWeek
+	c.Response.ContentType = "text/csv"
+	return c.Render(week)
+}
