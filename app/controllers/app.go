@@ -11,6 +11,7 @@ type App struct {
 
 func (c App) Index() revel.Result {
 	models.AwaitData()
+	c.Response.Out.Header().Set("Cache-Control", "public, max-age=600")
 	week := models.CurrentWeek
 	return c.Render(week)
 }
