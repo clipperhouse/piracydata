@@ -2,4 +2,4 @@
 // +build heroku
 package install
 
-import _ "bitbucket.org/liamstask/goose"
+import _ "bitbucket.org/liamstask/goose/cmd/goose"
