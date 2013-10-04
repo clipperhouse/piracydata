@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"github.com/coopernurse/gorp"
-	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 	"log"
 	"os"
 )
@@ -15,7 +15,9 @@ import (
 //
 
 func openDb() *sql.DB {
-	connection := os.Getenv("DATABASE_URL")
+	url := os.Getenv("DATABASE_URL")
+	connection, _ := pq.ParseURL(url)
+	connection = connection + " sslmode=require"
 	log.Println(connection)
 
 	db, err := sql.Open("postgres", connection)
