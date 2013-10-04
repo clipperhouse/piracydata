@@ -15,6 +15,7 @@ import (
 
 func openDb() *sql.DB {
 	connection := os.Getenv("DATABASE_URL")
+	log.Println(connection)
 
 	db, err := sql.Open("postgres", connection)
 	if err != nil {
@@ -25,7 +26,8 @@ func openDb() *sql.DB {
 }
 
 func GetDbMap() (dbmap *gorp.DbMap) {
-	dbmap = &gorp.DbMap{Db: openDb(), Dialect: gorp.PostgresDialect{}}
+	db := openDb()
+	dbmap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbmap.AddTableWithName(Movie{}, "movies").SetKeys(true, "Id")
 	return
 }
