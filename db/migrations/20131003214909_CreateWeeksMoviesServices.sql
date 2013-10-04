@@ -1,13 +1,14 @@
 -- +goose Up
 CREATE TABLE movies (
     id          serial primary key,
-    week        date NOT NULL,
+    week		date,
     title       varchar(200),
-    imdb        varchar(20),
+    imdb        varchar(50),
     rank        integer,
-    stream      boolean,
-    rent        boolean,
-    buy         boolean
+    streaming   integer,
+    rental      integer,
+    purchase    integer,
+    dvd         integer
 );
 
 -- +goose Down

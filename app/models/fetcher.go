@@ -24,6 +24,7 @@ func FetchAll() {
 	getCurrentMovies()
 	getCurrentAvailability()
 	summarizeWeek(&CurrentWeek)
+	persist(CurrentWeek.Movies)
 	onComplete <- true
 }
 
@@ -49,10 +50,10 @@ func getCurrentMovies() {
 	currentWeek := Week{}
 	date, err := time.Parse(time.RFC1123Z, firstItem.PubDate)
 	if err != nil {
-		currentWeek.Name = fmt.Sprintf("Week ending %s", firstItem.PubDate)
-	} else {
-		currentWeek.Name = fmt.Sprintf("Week ending %s", date.Format(layout))
+		fmt.Println(err)
 	}
+	loc, _ := time.LoadLocation("")
+	currentWeek.Date = time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, loc)
 
 	content := html.UnescapeString(firstItem.Content)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
@@ -66,11 +67,39 @@ func getCurrentMovies() {
 		title := s.Find("td").Eq(2).Find("a").Text()
 		imdbUrl, _ := s.Find("a[href^=\"http://www.imdb.com/title\"]").First().Attr("href")
 		imdb := strings.Split(imdbUrl, "/")[4]
-		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Name, Services: make(map[string]bool)}
+		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Date, Services: make(map[string]bool)}
 	})
 
 	currentWeek.Movies = movies
 	CurrentWeek = currentWeek
+}
+
+func persist(movies []Movie) {
+	dbmap := GetDbMap()
+	for _, movie := range movies {
+		var existing []Movie
+		_, err := dbmap.Select(&existing, "select * from movies where week = :week and title = :title", map[string]interface{}{
+			"week":  movie.Week,
+			"title": movie.Title,
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
+		if len(existing) > 0 {
+			movie.Id = existing[0].Id
+			fmt.Println("Updating movie " + movie.Title)
+			_, err = dbmap.Update(&movie)
+			if err != nil {
+				fmt.Println(err)
+			}
+		} else {
+			fmt.Println("Inserting movie " + movie.Title)
+			err = dbmap.Insert(&movie)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+	}
 }
 
 func getCurrentAvailability() {

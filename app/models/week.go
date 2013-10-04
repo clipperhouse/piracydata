@@ -1,8 +1,12 @@
 package models
 
+import (
+	"time"
+)
+
 type Week struct {
 	Movies    []Movie
-	Name      string
+	Date      time.Time
 	Streaming int
 	Rental    int
 	Purchase  int
