@@ -17,7 +17,7 @@ import (
 func openDb() *sql.DB {
 	url := os.Getenv("DATABASE_URL")
 	connection, _ := pq.ParseURL(url)
-	connection = connection + " sslmode=require"
+	connection += " sslmode=require"
 	log.Println(connection)
 
 	db, err := sql.Open("postgres", connection)
