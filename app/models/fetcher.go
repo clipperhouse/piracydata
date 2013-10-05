@@ -112,6 +112,7 @@ func persist(movies []Movie) {
 			}
 			if len(existing) > 0 {
 				service.Id = existing[0].Id
+				service.MovieId = existing[0].MovieId
 				fmt.Println("Updating service " + service.Name)
 				_, err = dbmap.Update(&service)
 				if err != nil {
