@@ -67,7 +67,7 @@ func getCurrentMovies() {
 		title := s.Find("td").Eq(2).Find("a").Text()
 		imdbUrl, _ := s.Find("a[href^=\"http://www.imdb.com/title\"]").First().Attr("href")
 		imdb := strings.Split(imdbUrl, "/")[4]
-		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Date, Services: make(map[string]bool)}
+		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: currentWeek.Date}
 	})
 
 	currentWeek.Movies = movies
@@ -130,7 +130,9 @@ func getAvailability(movie *Movie, done chan bool) {
 	services.Each(func(i int, s *goquery.Selection) {
 		if class, exists := s.Attr("class"); exists {
 			name := strings.Split(class, " ")[0]
-			movie.Services[name] = s.HasClass("available")
+			available := s.HasClass("available")
+			service := Service{MovieId: movie.Id, Name: name, Available: available}
+			movie.Services = append(movie.Services, service)
 		}
 	})
 
