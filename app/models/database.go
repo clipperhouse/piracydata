@@ -3,21 +3,17 @@ package models
 import (
 	"database/sql"
 	"github.com/coopernurse/gorp"
-	"github.com/lib/pq"
+	_ "github.com/lib/pq"
 	"log"
 	"os"
 )
 
-// for local connection, set up postgres with user piracydata, create database piracydata, then:
-// export DATABASE_URL="dbname=piracydata host=localhost port=5432 sslmode=disable user=piracydata"
-// Heroku uses the DATABASE_URL enivronment variable, though theirs is an actual URL
-// can't use URL-style locally with postgres.app, as there is no way to disable SSL
-//
-
 func openDb() *sql.DB {
-	url := os.Getenv("DATABASE_URL")
-	connection, _ := pq.ParseURL(url)
-	connection += " sslmode=require"
+	connection := os.Getenv("DATABASE_URL")
+	sslmode := os.Getenv("PGSSLMODE") // based on https://github.com/lib/pq/commit/8875df52e9844f4c3fce993c8598bbd1c95c8a0f
+	if sslmode == "" {
+		os.Setenv("PGSSLMODE", "disable")
+	}
 	log.Println(connection)
 
 	db, err := sql.Open("postgres", connection)

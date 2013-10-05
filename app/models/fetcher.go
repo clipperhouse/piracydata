@@ -98,6 +98,33 @@ func persist(movies []Movie) {
 			if err != nil {
 				fmt.Println(err)
 			}
+			fmt.Printf("New Id: %d\n", movie.Id)
+		}
+
+		for _, service := range movie.Services {
+			var existing []Service
+			_, err := dbmap.Select(&existing, "select * from services where movie_id = :movie_id and name = :name", map[string]interface{}{
+				"movie_id": movie.Id,
+				"name":     service.Name,
+			})
+			if err != nil {
+				fmt.Println(err)
+			}
+			if len(existing) > 0 {
+				service.Id = existing[0].Id
+				fmt.Println("Updating service " + service.Name)
+				_, err = dbmap.Update(&service)
+				if err != nil {
+					fmt.Println(err)
+				}
+			} else {
+				fmt.Println("Inserting service " + service.Name)
+				service.MovieId = movie.Id
+				err = dbmap.Insert(&service)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
 		}
 	}
 }
@@ -131,7 +158,7 @@ func getAvailability(movie *Movie, done chan bool) {
 		if class, exists := s.Attr("class"); exists {
 			name := strings.Split(class, " ")[0]
 			available := s.HasClass("available")
-			service := Service{MovieId: movie.Id, Name: name, Available: available}
+			service := Service{Name: name, Available: available}
 			movie.Services = append(movie.Services, service)
 		}
 	})
