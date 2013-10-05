@@ -42,5 +42,6 @@ func GetDbMap() (dbmap *gorp.DbMap) {
 	db := openDb()
 	dbmap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 	dbmap.AddTableWithName(Movie{}, "movies").SetKeys(true, "Id")
+	dbmap.AddTableWithName(Service{}, "services").SetKeys(true, "Id")
 	return
 }
