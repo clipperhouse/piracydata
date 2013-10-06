@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Pathway+Gothic+One">
-    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css?{{.home.AppVersion}}">
     <link rel="shortcut icon" type="image/png" href="/public/img/favicon.ico">
     {{range .moreStyles}}
-      <link rel="stylesheet" type="text/css" href="/public/{{.}}">
+      <link rel="stylesheet" type="text/css" href="/public/{{.}}?{{.home.AppVersion}}">
     {{end}}
     {{range .moreScripts}}
       <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>

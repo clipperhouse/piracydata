@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/robfig/revel"
+	"piracydata/app"
 	"piracydata/app/models"
 )
 
@@ -23,6 +24,6 @@ func (c App) Csv() revel.Result {
 }
 
 func getModel() (home models.Home) {
-	home = models.Home{CurrentWeek: models.CurrentWeek}
+	home = models.Home{CurrentWeek: models.CurrentWeek, AppVersion: app.Version}
 	return
 }

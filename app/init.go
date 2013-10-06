@@ -9,6 +9,7 @@ import (
 
 var loadCurrentWeek = jobs.Func(models.LoadCurrentWeek)
 var fetch = jobs.Func(models.FetchAll)
+var Version string = time.Now().Format("200601021504")
 
 func init() {
 	// Filters is the default set of global filters.
