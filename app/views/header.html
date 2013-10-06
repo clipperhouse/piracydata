@@ -13,33 +13,7 @@
     {{end}}
     {{range .moreScripts}}
       <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
-    {{end}}
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load('visualization', '1', {packages: ['corechart']});
-    </script>
-    <script type="text/javascript">
-      function drawVisualization() {
-        var data = google.visualization.arrayToDataTable([
-          ['Week', 'Streaming', 'Rental', 'Purchase', 'Total Availability'],
-		  // the data below is only for the more recent week. we need to expose a slice of weeks.
-		  ['Week ending {{.home.CurrentWeek.Date.Format "Jan 2, 2006"}}',{{.home.CurrentWeek.Streaming}},{{.home.CurrentWeek.Rental}},{{.home.CurrentWeek.Purchase}},{{.home.CurrentWeek.All}}],
-		  ]);
-
-        var options = {
-//          title: 'Availability of the Top 10 Most Pirated Movies',
-		  height: 500,
-          vAxis: {title: "Number of Movies", maxValue:10, gridlines:{count:6}},
-          seriesType: "bars",
-          series: {3: {type: "line"}}
-        };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-      google.setOnLoadCallback(drawVisualization);
-    </script>
-	
+    {{end}}	
   </head>
   <body>
   	<header class="jumbotron">

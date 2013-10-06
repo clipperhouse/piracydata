@@ -7,6 +7,32 @@
   {{if eq .RunMode "dev"}}
     {{template "debug.html" .}}
   {{end}}
+  	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+    <script type="text/javascript">
+      function drawVisualization() {
+        var data = google.visualization.arrayToDataTable([
+          ['Week', 'Streaming', 'Rental', 'Purchase', 'Total Availability'],
+		  // the data below is only for the more recent week. we need to expose a slice of weeks.
+		  ['Week ending {{.home.CurrentWeek.Date.Format "Jan 2, 2006"}}',{{.home.CurrentWeek.Streaming}},{{.home.CurrentWeek.Rental}},{{.home.CurrentWeek.Purchase}},{{.home.CurrentWeek.All}}],
+		  ]);
+
+        var options = {
+//          title: 'Availability of the Top 10 Most Pirated Movies',
+		  height: 500,
+          vAxis: {title: "Number of Movies", maxValue:10, gridlines:{count:6}},
+          seriesType: "bars",
+          series: {3: {type: "line"}}
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+      google.setOnLoadCallback(drawVisualization);
+    </script>
+
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   <script src="//code.jquery.com/jquery.js" type="text/javascript" charset="utf-8"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
