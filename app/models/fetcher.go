@@ -87,13 +87,11 @@ func persist(movies []Movie) {
 		}
 		if len(existing) > 0 {
 			movie.Id = existing[0].Id
-			fmt.Println("Updating movie " + movie.Title)
 			_, err = dbmap.Update(&movie)
 			if err != nil {
 				fmt.Println(err)
 			}
 		} else {
-			fmt.Println("Inserting movie " + movie.Title)
 			err = dbmap.Insert(&movie)
 			if err != nil {
 				fmt.Println(err)
@@ -113,13 +111,11 @@ func persist(movies []Movie) {
 			if len(existing) > 0 {
 				service.Id = existing[0].Id
 				service.MovieId = existing[0].MovieId
-				fmt.Println("Updating service " + service.Name)
 				_, err = dbmap.Update(&service)
 				if err != nil {
 					fmt.Println(err)
 				}
 			} else {
-				fmt.Println("Inserting service " + service.Name)
 				service.MovieId = movie.Id
 				err = dbmap.Insert(&service)
 				if err != nil {

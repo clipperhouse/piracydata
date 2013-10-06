@@ -12,7 +12,6 @@ import (
 func openDb() *sql.DB {
 	connection := os.Getenv("DATABASE_URL")
 	sslmode := os.Getenv("PGSSLMODE") // based on https://github.com/lib/pq/commit/8875df52e9844f4c3fce993c8598bbd1c95c8a0f
-	log.Println("sslmode: " + sslmode)
 
 	if sslmode == "" {
 		is_heroku := false
@@ -28,7 +27,6 @@ func openDb() *sql.DB {
 			os.Setenv("PGSSLMODE", "disable")
 		}
 	}
-	log.Println(connection)
 
 	db, err := sql.Open("postgres", connection)
 	if err != nil {
