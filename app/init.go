@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/darkhelmet/webutil"
 	"github.com/robfig/revel"
 	"github.com/robfig/revel/modules/jobs/app/jobs"
 	"piracydata/app/models"
@@ -27,9 +28,16 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
+		enableGzip()
 		jobs.Now(loadCurrentWeek)
 		jobs.Now(fetch)
 		jobs.Every(1*time.Hour, loadCurrentWeek)
 		jobs.Every(1*time.Hour, fetch)
 	})
+}
+
+func enableGzip() {
+	handler := revel.Server.Handler
+	handler = webutil.GzipHandler{handler}
+	revel.Server.Handler = handler
 }
