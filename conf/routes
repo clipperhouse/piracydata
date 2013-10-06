@@ -6,8 +6,7 @@ module:testrunner
 module:jobs
 
 GET     /                                       App.Index
-
-GET     /data.csv                               App.Csv
+GET     /csv									App.Csv
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

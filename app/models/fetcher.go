@@ -154,6 +154,7 @@ func getAvailability(movie *Movie, done chan bool) {
 	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
 
 	services := doc.Find("#streaming, #rental, #rental, #dvd").Find("ul > li").Not(".none-avail")
+	movie.ServicesMap = make(map[string]bool)
 
 	services.Each(func(i int, s *goquery.Selection) {
 		if class, exists := s.Attr("class"); exists {
@@ -161,6 +162,7 @@ func getAvailability(movie *Movie, done chan bool) {
 			available := s.HasClass("available")
 			service := Service{Name: name, Available: available}
 			movie.Services = append(movie.Services, service)
+			movie.ServicesMap[name] = available
 		}
 	})
 

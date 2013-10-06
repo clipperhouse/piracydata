@@ -16,6 +16,7 @@ func (c App) Index() revel.Result {
 }
 
 func (c App) Csv() revel.Result {
+	c.Response.Out.Header().Set("Content-Disposition", "attachment; filename=piracydata.csv")
 	c.Response.ContentType = "text/csv"
 	home := getModel()
 	return c.Render(home)
