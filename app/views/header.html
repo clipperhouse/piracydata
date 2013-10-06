@@ -23,7 +23,7 @@
         var data = google.visualization.arrayToDataTable([
           ['Week', 'Streaming', 'Rental', 'Purchase', 'Total Availability'],
 		  // the data below is only for the more recent week. we need to expose a slice of weeks.
-		  ['Week ending {{.week.Date.Format "Jan 2, 2006"}}',{{.week.Streaming}},{{.week.Rental}},{{.week.Purchase}},{{.week.All}}],
+		  ['Week ending {{.home.CurrentWeek.Date.Format "Jan 2, 2006"}}',{{.home.CurrentWeek.Streaming}},{{.home.CurrentWeek.Rental}},{{.home.CurrentWeek.Purchase}},{{.home.CurrentWeek.All}}],
 		  ]);
 
         var options = {

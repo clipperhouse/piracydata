@@ -10,15 +10,19 @@ type App struct {
 }
 
 func (c App) Index() revel.Result {
-	models.AwaitData()
 	c.Response.Out.Header().Set("Cache-Control", "public, max-age=600")
-	week := models.CurrentWeek
-	return c.Render(week)
+	home := getModel()
+	return c.Render(home)
 }
 
 func (c App) Csv() revel.Result {
-	models.AwaitData()
-	week := models.CurrentWeek
 	c.Response.ContentType = "text/csv"
-	return c.Render(week)
+	home := getModel()
+	return c.Render(home)
+}
+
+func getModel() (home models.Home) {
+	models.AwaitData()
+	home = models.Home{models.CurrentWeek}
+	return
 }

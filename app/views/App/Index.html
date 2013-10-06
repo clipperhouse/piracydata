@@ -18,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{range .week.Movies}}
+				{{range .home.CurrentWeek.Movies}}
 					<tr>
 						<th>{{.Rank}}.</th>
 						<td><span class="title {{if .All}}text-success{{else}}text-danger{{end}}">{{.Title}}</span></td>
@@ -30,7 +30,7 @@
 			</tbody>
 		</table>
 	</div>					
-  <small>Week ending {{.week.Date.Format "Jan 2, 2006"}}. Source: <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> and <a href="http://www.canistream.it/">Can I Stream It</a>.</small>
+  <small>Week ending {{.home.CurrentWeek.Date.Format "Jan 2, 2006"}}. Source: <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> and <a href="http://www.canistream.it/">Can I Stream It</a>.</small>
 		
 </section> <!-- /container -->
 
@@ -54,7 +54,7 @@
 	<hr />
 	<p><strong>Methodology:</strong> The way we develop this data set is very simple. We take the top 10 most pirated movies on BitTorrent as reported by <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> each Monday. Then we look up whether each movie is available in a legal digital format using the <a href="http://www.canistream.it/">Can I Stream It</a> service. We display the most recent week's data in the table above, but the entire data set, with fine-grained service availability, is available for download.</p>
 	<br />
-    <p class="lead text-center"><a href="/data.csv"><button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-cloud-download"></span> Download raw data</button></a></p>
+    <p class="lead text-center"><a href="/csv"><button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-cloud-download"></span> Download raw data</button></a></p>
 	<br />
 </section>
 {{template "footer.html" .}}
