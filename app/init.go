@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var fetch = jobs.Func(models.FetchAll)
+
 func init() {
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
@@ -23,13 +25,7 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
-		jobs.Now(update)
-		jobs.Every(1*time.Hour, update)
+		jobs.Now(fetch)
+		jobs.Every(1*time.Hour, fetch)
 	})
-}
-
-var update = jobs.Func(updateCache)
-
-func updateCache() {
-	models.FetchAll()
 }
