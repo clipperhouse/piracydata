@@ -12,6 +12,7 @@ a {
 }
 h1 {
 	font-family: 'Pathway Gothic One';
+	white-space: nowrap;
 }
 h2 {
 	font-family: 'Pathway Gothic One';
