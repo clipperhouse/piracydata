@@ -23,7 +23,6 @@ func (c App) Csv() revel.Result {
 }
 
 func getModel() (home models.Home) {
-	models.AwaitData()
-	home = models.Home{models.CurrentWeek}
+	home = models.Home{CurrentWeek: models.CurrentWeek}
 	return
 }

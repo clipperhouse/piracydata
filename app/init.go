@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+var loadCurrentWeek = jobs.Func(models.LoadCurrentWeek)
 var fetch = jobs.Func(models.FetchAll)
 
 func init() {
@@ -25,7 +26,9 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
+		jobs.Now(loadCurrentWeek)
 		jobs.Now(fetch)
+		jobs.Every(1*time.Hour, loadCurrentWeek)
 		jobs.Every(1*time.Hour, fetch)
 	})
 }

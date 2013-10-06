@@ -18,3 +18,7 @@ type Movie struct {
 	Services    []Service       `db:"-"`
 	ServicesMap map[string]bool `db:"-"`
 }
+
+func (movie *Movie) Summarize() {
+	movie.All = movie.Streaming + movie.Rental + movie.Purchase
+}

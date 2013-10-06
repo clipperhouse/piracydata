@@ -1,5 +1,5 @@
 package models
 
 type Home struct {
-	CurrentWeek Week
+	CurrentWeek *Week
 }
