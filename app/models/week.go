@@ -5,7 +5,7 @@ import (
 )
 
 type Week struct {
-	Movies    []Movie
+	Movies    []*Movie
 	Date      time.Time
 	Streaming int
 	Rental    int

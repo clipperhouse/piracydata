@@ -59,17 +59,17 @@ func LoadCurrentWeek() {
 	db.QueryRow("select distinct week from movies order by week desc limit 1").Scan(&date)
 	week.Date = date
 
-	var movies []Movie
+	var movies []*Movie
 	dbmap.Select(&movies, "select * from movies where week = :week", map[string]interface{}{
 		"week": week.Date,
 	})
 
-	for i, _ := range movies {
-		movies[i].Summarize()
+	for _, m := range movies {
+		m.Summarize()
 
 		var services []Service
 		dbmap.Select(&services, "select * from services where movie_id = :movie_id", map[string]interface{}{
-			"movie_id": movies[i].Id,
+			"movie_id": m.Id,
 		})
 
 		servicesMap := make(map[string]bool)
@@ -77,7 +77,7 @@ func LoadCurrentWeek() {
 			servicesMap[service.Name] = service.Available
 		}
 
-		movies[i].Services = services
+		m.Services = services
 	}
 	week.Movies = movies
 

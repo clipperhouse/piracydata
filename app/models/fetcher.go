@@ -45,13 +45,13 @@ func getCurrentMovies() {
 		log.Println(err)
 	}
 	rows := doc.Find("tbody > tr")
-	movies := make([]Movie, rows.Length())
+	movies := make([]*Movie, rows.Length())
 
 	rows.Each(func(i int, s *goquery.Selection) {
 		title := s.Find("td").Eq(2).Find("a").Text()
 		imdbUrl, _ := s.Find("a[href^=\"http://www.imdb.com/title\"]").First().Attr("href")
 		imdb := strings.Split(imdbUrl, "/")[4]
-		movies[i] = Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: week.Date}
+		movies[i] = &Movie{Title: title, Imdb: imdb, Rank: i + 1, Week: week.Date}
 	})
 
 	week.Movies = movies
@@ -111,8 +111,8 @@ func persist() {
 
 func getCurrentAvailability() {
 	done := make(chan bool, 1)
-	for m := range week.Movies {
-		go getAvailability(&week.Movies[m], done)
+	for _, m := range week.Movies {
+		go getAvailability(m, done)
 	}
 	for _ = range week.Movies {
 		<-done
