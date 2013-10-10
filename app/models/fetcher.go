@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/xml"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mjibson/goread/goapp/rss"
+	"github.com/mjibson/goread/rss"
 	"html"
 	"log"
 	"net/http"
