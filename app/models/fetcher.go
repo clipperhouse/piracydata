@@ -17,8 +17,6 @@ func FetchAll() {
 	log.Println("Starting FetchAll")
 	week = &Week{}
 	getCurrentMovies()
-	getCurrentAvailability()
-	persist()
 }
 
 var url string = "http://torrentfreak.com/category/dvdrip/feed/"
@@ -39,6 +37,11 @@ func getCurrentMovies() {
 	loc, _ := time.LoadLocation("")
 	week.Date = time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, loc)
 
+	if existsInDb(week) {
+		log.Printf("Week of " + date.Format(layout) + " already exists\n")
+		return
+	}
+
 	content := html.UnescapeString(firstItem.Content)
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
 	if err != nil {
@@ -55,6 +58,20 @@ func getCurrentMovies() {
 	})
 
 	week.Movies = movies
+
+	getCurrentAvailability()
+	persist()
+}
+
+func existsInDb(week *Week) bool {
+	dbmap := GetDbMap()
+	count, err := dbmap.SelectInt("select count(*) from movies where week = :week", map[string]interface{}{
+		"week": week.Date,
+	})
+	if err != nil {
+		log.Println(err)
+	}
+	return count > 0
 }
 
 func getCurrentAvailability() {
@@ -99,7 +116,7 @@ func getAvailability(movie *Movie, done chan bool) {
 func persist() {
 	dbmap := GetDbMap()
 	for _, movie := range week.Movies {
-		log.Println("Updating " + movie.Title)
+		log.Println("Persisting '" + movie.Title + "' for week of " + movie.Week.Format(layout))
 		var existing []Movie
 		_, err := dbmap.Select(&existing, "select * from movies where week = :week and title = :title", map[string]interface{}{
 			"week":  movie.Week,
