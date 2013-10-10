@@ -57,6 +57,45 @@ func getCurrentMovies() {
 	week.Movies = movies
 }
 
+func getCurrentAvailability() {
+	done := make(chan bool, 1)
+	for _, m := range week.Movies {
+		go getAvailability(m, done)
+	}
+	for _ = range week.Movies {
+		<-done
+	}
+}
+
+func getAvailability(movie *Movie, done chan bool) {
+	url := "http://www.canistream.it/external/imdb/" + movie.Imdb
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		panic(err)
+	}
+
+	movie.Streaming = doc.Find("#streaming > ul > li.available").Length()
+	movie.Rental = doc.Find("#rental > ul > li.available").Length()
+	movie.Purchase = doc.Find("#purchase > ul > li.available").Length()
+	movie.DVD = doc.Find("#dvd > ul > li.available").Length()
+	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
+
+	services := doc.Find("#streaming, #rental, #rental, #dvd").Find("ul > li").Not(".none-avail")
+	movie.ServicesMap = make(map[string]bool)
+
+	services.Each(func(i int, s *goquery.Selection) {
+		if class, exists := s.Attr("class"); exists {
+			name := strings.Split(class, " ")[0]
+			available := s.HasClass("available")
+			service := Service{Name: name, Available: available}
+			movie.Services = append(movie.Services, service)
+			movie.ServicesMap[name] = available
+		}
+	})
+
+	done <- true
+}
+
 func persist() {
 	dbmap := GetDbMap()
 	for _, movie := range week.Movies {
@@ -107,43 +146,4 @@ func persist() {
 			}
 		}
 	}
-}
-
-func getCurrentAvailability() {
-	done := make(chan bool, 1)
-	for _, m := range week.Movies {
-		go getAvailability(m, done)
-	}
-	for _ = range week.Movies {
-		<-done
-	}
-}
-
-func getAvailability(movie *Movie, done chan bool) {
-	url := "http://www.canistream.it/external/imdb/" + movie.Imdb
-	doc, err := goquery.NewDocument(url)
-	if err != nil {
-		panic(err)
-	}
-
-	movie.Streaming = doc.Find("#streaming > ul > li.available").Length()
-	movie.Rental = doc.Find("#rental > ul > li.available").Length()
-	movie.Purchase = doc.Find("#purchase > ul > li.available").Length()
-	movie.DVD = doc.Find("#dvd > ul > li.available").Length()
-	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
-
-	services := doc.Find("#streaming, #rental, #rental, #dvd").Find("ul > li").Not(".none-avail")
-	movie.ServicesMap = make(map[string]bool)
-
-	services.Each(func(i int, s *goquery.Selection) {
-		if class, exists := s.Attr("class"); exists {
-			name := strings.Split(class, " ")[0]
-			available := s.HasClass("available")
-			service := Service{Name: name, Available: available}
-			movie.Services = append(movie.Services, service)
-			movie.ServicesMap[name] = available
-		}
-	})
-
-	done <- true
 }
