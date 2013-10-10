@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/xml"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mjibson/goread/goapp/rss"
+	"github.com/mjibson/goread/rss"
 	"html"
 	"log"
 	"net/http"
@@ -71,12 +71,12 @@ func persist() {
 		}
 		if len(existing) > 0 {
 			movie.Id = existing[0].Id
-			_, err = dbmap.Update(&movie)
+			_, err = dbmap.Update(movie)
 			if err != nil {
 				log.Println(err)
 			}
 		} else {
-			err = dbmap.Insert(&movie)
+			err = dbmap.Insert(movie)
 			if err != nil {
 				log.Println(err)
 			}

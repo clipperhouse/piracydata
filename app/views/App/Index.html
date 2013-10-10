@@ -37,19 +37,19 @@
 <br /><br />
 <section class="jumbotron">
 	
-	<h2 class="text-center">Over the past 52 weeks, only <span class="text-danger">33%</span> of the most-pirated movies have been available legally in digital form.</h2> 
+	<h2 class="text-center">Over the past {{.home.Stats.NWeeks}} weeks, {{only .home.Stats.Digital}}<span class="stats">{{.home.Stats.Digital}}%</span> of the most-pirated movies have been available legally in digital form.</h2> 
 	
 	<hr>
 			
-	<h2 class="text-center">Over the same period, only <span class="text-danger">18%</span> have been available for rental or streaming.</h2> <!-- The word "only" needs to be conditional on the percentage (under 50%) -->
+	<h2 class="text-center">Over the same period, {{only .home.Stats.RentStream}}<span class="stats">{{.home.Stats.RentStream}}%</span> have been available for rental or streaming.</h2> <!-- The word "only" needs to be conditional on the percentage (under 50%) -->
 	
 	<hr>
 	
-	<h2 class="text-center">In addition, only <span class="text-danger">6%</span> have been available on a legal streaming service.</h2> 
+	<h2 class="text-center">In addition, {{only .home.Stats.Streaming}}<span class="stats">{{.home.Stats.Streaming}}%</span> have been available on a legal streaming service.</h2> 
 	
 </section>
 <section class="container">
-    <p class="lead text-center">The chart below shows the legal availability of the most pirated movies over the past XX weeks.</p>
+    <p class="lead text-center">The chart below shows the legal availability of the most pirated movies over the past {{.home.Stats.NWeeks}} weeks.</p>
 	<div id='chart_div'></div>
 	<hr />
 	<p><strong>Methodology:</strong> The way we develop this data set is very simple. We take the top 10 most pirated movies on BitTorrent as reported by <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> each Monday. Then we look up whether each movie is available in a legal digital format using the <a href="http://www.canistream.it/">Can I Stream It</a> service. We display the most recent week's data in the table above, but the entire data set, with fine-grained service availability, is available for download.</p>
