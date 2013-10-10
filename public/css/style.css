@@ -47,4 +47,8 @@ header p {
 }
 .table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th{
 	transition: background-color 0.3s;
- }
+}
+.stats {
+	font-size: 140%;
+	color: #B88D65;
+}

@@ -8,11 +8,19 @@ import (
 	"time"
 )
 
-var loadCurrentWeek = jobs.Func(models.LoadCurrentWeek)
+var loadAllWeeks = jobs.Func(models.LoadAllWeeks)
 var fetch = jobs.Func(models.FetchAll)
 var Version string = time.Now().Format("200601021504")
 
 func init() {
+	revel.TemplateFuncs["only"] = func(a int) string {
+		if a > 49 || a == 0 {
+			return ""
+		} else {
+			return "only "
+		}
+	}
+	
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
 		revel.PanicFilter,             // Recover from panics and display an error page instead.
@@ -29,9 +37,9 @@ func init() {
 
 	revel.OnAppStart(func() {
 		enableGzip()
-		jobs.Now(loadCurrentWeek)
+		jobs.Now(loadAllWeeks)
 		jobs.Now(fetch)
-		jobs.Every(1*time.Hour, loadCurrentWeek)
+		jobs.Every(1*time.Hour, loadAllWeeks)
 		jobs.Every(1*time.Hour, fetch)
 	})
 }
