@@ -97,7 +97,7 @@ func getAvailability(movie *Movie, done chan bool) {
 	movie.DVD = doc.Find("#dvd > ul > li.available").Length()
 	movie.All = movie.Streaming + movie.Rental + movie.Purchase // We're not counting DVDs here
 
-	services := doc.Find("#streaming, #rental, #rental, #dvd").Find("ul > li").Not(".none-avail")
+	services := doc.Find("#streaming, #rental, #purchase, #dvd").Find("ul > li").Not(".none-avail")
 	movie.ServicesMap = make(map[string]bool)
 
 	services.Each(func(i int, s *goquery.Selection) {
