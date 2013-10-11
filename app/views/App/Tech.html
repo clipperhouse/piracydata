@@ -1,0 +1,30 @@
+{{set . "title" "piracydata.org - tech"}}
+{{template "header.html" .}}
+
+<section class="container lead">
+	<h2>About the tech</h2>
+
+	<p>
+		piracydata.org is built in the <a href="http://golang.org/">Go</a> programming language. The source code is available <a href="https://github.com/clipperhouse/piracydata">here</a>.
+	</p>
+
+	<p>
+		The site uses the <a href="http://robfig.github.io/revel/">Revel</a> web framework, the <a href="https://github.com/coopernurse/gorp">gorp</a> database framework, and <a href="https://github.com/mjibson/goread">Go Read’s</a> RSS model.
+	</p>
+
+	<p>
+		The movies of the week are pulled from <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> via RSS. Their availability for streaming, rental and purchase are pulled from <a href="http://www.canistream.it/">Can I Stream It?</a>, and we correlate and summarize the data.
+	</p>
+
+	<p>
+		The site is hosted on Heroku. There’s a <a href="https://github.com/robfig/heroku-buildpack-go-revel">buildpack</a> for that. We put Amazon’s CDN in front of it.
+	</p>
+
+	<p>
+		The engineers are <a href="https://github.com/clipperhouse">Matt Sherman</a> and <a href="https://github.com/elidourado">Eli Dourado</a>. The project was conceived by <a href="http://jerrybrito.com/">Jerry Brito</a>, and he did the snazzy design as well.
+	</p>
+</section>
+
+<br /><br />
+
+{{template "footer.html" .}}

@@ -23,6 +23,11 @@ func (c App) Csv() revel.Result {
 	return c.Render(home)
 }
 
+func (c App) Tech() revel.Result {
+	c.Response.Out.Header().Set("Cache-Control", "public, max-age=600")
+	return c.Render()
+}
+
 func getModel() (home models.Home) {
 	home = models.Home{CurrentWeek: models.CurrentWeek, AllWeeks: models.Weeks, Stats: calculateStats(), AppVersion: app.Version}
 	return
@@ -45,8 +50,8 @@ func calculateStats() models.Stats {
 		}
 	}
 	nWeeks := len(models.Weeks)
-	digital = int(100*digital/n)
-	rentStream = int(100*rentStream/n)
-	streaming = int(100*streaming/n)
+	digital = int(100 * digital / n)
+	rentStream = int(100 * rentStream / n)
+	streaming = int(100 * streaming / n)
 	return models.Stats{Digital: digital, RentStream: rentStream, Streaming: streaming, NWeeks: nWeeks}
 }
