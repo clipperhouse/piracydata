@@ -103,7 +103,7 @@ func LoadAllWeeks() {
 	db := dbmap.Db
 
 	var dates []time.Time
-	rows, err :=db.Query("select distinct week from movies order by week desc limit 52")
+	rows, err :=db.Query("select distinct week from movies order by week desc")
 	if err != nil {
 		panic(err)
 	}
@@ -133,8 +133,9 @@ func LoadAllWeeks() {
 		for _, service := range services {
 			servicesMap[service.Name] = service.Available
 		}
-
+		
 		m.Services = services
+		m.ServicesMap = servicesMap
 	}
 
 	for _, d := range dates {
