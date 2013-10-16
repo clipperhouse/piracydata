@@ -1,0 +1,43 @@
+{{set . "title" "piracydata.org - FAQ"}}
+{{template "header.html" .}}
+
+<section class="container lead">
+	<h2>Is piracydata.org suggesting that piracy is justified?</h2>
+	
+	<p>Absolutely not. Piracy is illegal and wrong. We want to help answer a factual question about the world: Do people turn to piracy when the movies they want to watch are not available legally?</p>
+	
+	<h2>Is piracydata.org telling the movie industry how to run their business?</h2>
+	
+	<p>Absolutely not. We think that the business models that Hollywood studios choose to adopt are exactly that—their business.</p>
+
+	<h2>Is the data on piracydata.org accurate?</h2>
+	
+	<p>To the best of our knowledge, yes. On October 15, we experienced some launch day glitches, so regretfully, some of the data that we presented on our site was innaccurate. When this was brought to our attention, we immediately corrected the data on our site.</p>
+	
+	<p>The errors turned out to be problems with one of our upstream data sources. A full account of our launch day issues is <a href="http://techliberation.com/2013/10/15/launch-day-glitches-at-piracydata-org/" title="Launch Day Glitches at PiracyData.org">published at the Technology Liberation Front</a>.</p>
+		
+	<p>We are glad that our data is receiving such high scrutiny. We hope that this means that, after all the bugs are worked out, the dataset that we generate will be accurate beyond reproach.</p>
+	
+	<p>One additional note: the availability data that we present is a snapshot of the state of the world each Monday, when the new pirated movie data comes out. Because the data on pirated movies is retrospective, based on the previous week's activities, we do not update the availability data throughout the week. We want to record the earliest possible availability data in order to most directly compare piracy to availability in the same period. If a movie becomes available on Tuesday, we will still show the movie as unavailable for this reason.</p>
+	
+	<h2>About the tech</h2>
+
+	<p>piracydata.org is built in the <a href="http://golang.org/">Go</a> programming language. The source code is available <a href="https://github.com/clipperhouse/piracydata">here</a>.
+	</p>
+
+	<p>The site uses the <a href="http://robfig.github.io/revel/">Revel</a> web framework, the <a href="https://github.com/coopernurse/gorp">gorp</a> database framework, and <a href="https://github.com/mjibson/goread">Go Read’s</a> RSS model.
+	</p>
+
+	<p>The movies of the week are pulled from <a href="http://torrentfreak.com/category/dvdrip/">TorrentFreak</a> via RSS. Their availability for streaming, rental and purchase are pulled from <a href="http://www.canistream.it/">Can I Stream It?</a>, and we correlate and summarize the data.
+	</p>
+
+	<p>The site is hosted on Heroku. There’s a <a href="https://github.com/robfig/heroku-buildpack-go-revel">buildpack</a> for that. We put Amazon’s CDN in front of it.
+	</p>
+
+	<p>The engineers are <a href="https://github.com/clipperhouse">Matt Sherman</a> and <a href="https://github.com/elidourado">Eli Dourado</a>. The project was conceived by <a href="http://jerrybrito.com/">Jerry Brito</a>, and he did the snazzy design as well.
+	</p>
+</section>
+
+<br /><br />
+
+{{template "footer.html" .}}
