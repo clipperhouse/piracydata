@@ -7,7 +7,7 @@ module:jobs
 
 GET     /                                       App.Index
 GET     /csv									App.Csv
-GET     /tech									App.Tech
+GET     /faq									App.Faq
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

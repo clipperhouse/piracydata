@@ -23,7 +23,7 @@ func (c App) Csv() revel.Result {
 	return c.Render(home)
 }
 
-func (c App) Tech() revel.Result {
+func (c App) Faq() revel.Result {
 	c.Response.Out.Header().Set("Cache-Control", "public, max-age=600")
 	return c.Render()
 }
