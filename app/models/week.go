@@ -5,13 +5,15 @@ import (
 )
 
 type Week struct {
-	Movies    []*Movie
-	Date      time.Time
-	Streaming int
-	Rental    int
-	Purchase  int
-	DVD       int
-	All       int // Actually just streaming + rental + purchase, we ignore DVD availability for now
+	Id         int       `db:"id"`
+	IsApproved bool      `db:"is_approved"`
+	Date       time.Time `db:"date"`
+	Movies     []*Movie  `db:"-"` // ignore, calculate at runtime
+	Streaming  int       `db:"-"` // ditto
+	Rental     int       `db:"-"` // ditto
+	Purchase   int       `db:"-"` // ditto
+	DVD        int       `db:"-"` // ditto
+	All        int       `db:"-"` // ditto
 }
 
 func (week *Week) Summarize() {

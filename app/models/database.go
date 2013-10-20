@@ -6,8 +6,8 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"strings"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -46,6 +46,7 @@ func openDb() *sql.DB {
 func GetDbMap() (dbmap *gorp.DbMap) {
 	db := openDb()
 	dbmap = &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+	dbmap.AddTableWithName(Week{}, "weeks").SetKeys(true, "Id")
 	dbmap.AddTableWithName(Movie{}, "movies").SetKeys(true, "Id")
 	dbmap.AddTableWithName(Service{}, "services").SetKeys(true, "Id")
 	return
@@ -96,14 +97,14 @@ func LoadCurrentWeek() {
 
 func LoadAllWeeks() {
 	log.Println("Starting LoadAllWeeks")
-	
+
 	var weeks []*Week
 
 	dbmap := GetDbMap()
 	db := dbmap.Db
 
 	var dates []time.Time
-	rows, err :=db.Query("select distinct week from movies order by week desc")
+	rows, err := db.Query("select distinct date from weeks where is_approved = TRUE order by date desc")
 	if err != nil {
 		panic(err)
 	}
@@ -133,7 +134,7 @@ func LoadAllWeeks() {
 		for _, service := range services {
 			servicesMap[service.Name] = service.Available
 		}
-		
+
 		m.Services = services
 		m.ServicesMap = servicesMap
 	}
@@ -143,7 +144,7 @@ func LoadAllWeeks() {
 		week.Date = d
 		for _, m := range movies {
 			if m.Week.Equal(d) {
-				week.Movies = append(week.Movies,m)
+				week.Movies = append(week.Movies, m)
 			}
 		}
 		week.Summarize()
@@ -157,8 +158,6 @@ func LoadAllWeeks() {
 	return
 }
 
-
-
 // sorting functions
 func (w WeekSet) Len() int {
 	return len(w)
@@ -169,7 +168,6 @@ func (w WeekSet) Swap(i, j int) {
 func (w WeekSet) Less(i, j int) bool {
 	return w[i].Date.Before(w[j].Date)
 }
-
 
 func (w Week) Len() int {
 	return len(w.Movies)

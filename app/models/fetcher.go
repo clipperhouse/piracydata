@@ -65,7 +65,7 @@ func getCurrentMovies() {
 
 func existsInDb(week *Week) bool {
 	dbmap := GetDbMap()
-	count, err := dbmap.SelectInt("select count(*) from movies where week = :week", map[string]interface{}{
+	count, err := dbmap.SelectInt("select count(*) from weeks where date = :week", map[string]interface{}{
 		"week": week.Date,
 	})
 	if err != nil {
@@ -115,6 +115,31 @@ func getAvailability(movie *Movie, done chan bool) {
 
 func persist() {
 	dbmap := GetDbMap()
+	log.Println("Persisting week " + week.Date.Format(layout))
+
+	var existing []Week
+	_, err := dbmap.Select(&existing, "select * from weeks where date = :date limit 1", map[string]interface{}{
+		"date": week.Date,
+	})
+	if err != nil {
+		log.Println(err)
+	}
+	if len(existing) > 0 {
+		log.Println("Updating week " + week.Date.Format(layout))
+		week.Id = existing[0].Id
+		_, err = dbmap.Update(week)
+		if err != nil {
+			log.Println(err)
+		}
+	} else {
+		log.Println("Inserting week " + week.Date.Format(layout))
+		week.IsApproved = false
+		err = dbmap.Insert(week)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
 	for _, movie := range week.Movies {
 		log.Println("Persisting '" + movie.Title + "' for week of " + movie.Week.Format(layout))
 		var existing []Movie
