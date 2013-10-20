@@ -29,7 +29,7 @@ func openDb() *sql.DB {
 			}
 		}
 		if is_heroku {
-			os.Setenv("PGSSLMODE", "require")
+			//os.Setenv("PGSSLMODE", "require")
 		} else {
 			os.Setenv("PGSSLMODE", "disable")
 		}
