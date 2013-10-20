@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -18,23 +17,6 @@ var Weeks []*Week
 
 func openDb() *sql.DB {
 	connection := os.Getenv("DATABASE_URL")
-	sslmode := os.Getenv("PGSSLMODE") // based on https://github.com/lib/pq/commit/8875df52e9844f4c3fce993c8598bbd1c95c8a0f
-
-	if sslmode == "" {
-		is_heroku := false
-		for _, env := range os.Environ() {
-			if strings.HasPrefix(env, "HEROKU_POSTGRESQL") {
-				is_heroku = true
-				break
-			}
-		}
-		if is_heroku {
-			//os.Setenv("PGSSLMODE", "require")
-		} else {
-			os.Setenv("PGSSLMODE", "disable")
-		}
-	}
-
 	db, err := sql.Open("postgres", connection)
 	if err != nil {
 		log.Println(err)
