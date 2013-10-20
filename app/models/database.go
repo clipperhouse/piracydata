@@ -34,49 +34,6 @@ func GetDbMap() (dbmap *gorp.DbMap) {
 	return
 }
 
-/*
-func LoadCurrentWeek() {
-	log.Println("Starting LoadCurrentWeek")
-
-	week := &Week{}
-
-	dbmap := GetDbMap()
-	db := dbmap.Db
-
-	var date time.Time
-	db.QueryRow("select distinct week from movies order by week desc limit 1").Scan(&date)
-	week.Date = date
-
-	var movies []*Movie
-	dbmap.Select(&movies, "select * from movies where week = :week", map[string]interface{}{
-		"week": week.Date,
-	})
-
-	for _, m := range movies {
-		m.Summarize()
-
-		var services []Service
-		dbmap.Select(&services, "select * from services where movie_id = :movie_id", map[string]interface{}{
-			"movie_id": m.Id,
-		})
-
-		servicesMap := make(map[string]bool)
-		for _, service := range services {
-			servicesMap[service.Name] = service.Available
-		}
-
-		m.Services = services
-	}
-	week.Movies = movies
-
-	week.Summarize()
-
-	CurrentWeek = week
-
-	return
-}
-*/
-
 func LoadAllWeeks() {
 	log.Println("Starting LoadAllWeeks")
 
