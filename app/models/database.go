@@ -83,9 +83,8 @@ func LoadAllWeeks() {
 		week.Date = d
 		week.Movies = movies.Where(func(m *Movie) bool {
 			return m.Week.Equal(week.Date)
-		})
+		}).Sort(by_rank)
 		week.Summarize()
-		sort.Sort(week)
 		weeks = append(weeks, week)
 	}
 	// add sorting
@@ -93,6 +92,10 @@ func LoadAllWeeks() {
 	Weeks = weeks
 	CurrentWeek = Weeks[len(Weeks)-1]
 	return
+}
+
+var by_rank = func(movies Movies, a, b int) bool {
+	return movies[a].Rank < movies[b].Rank
 }
 
 // sorting functions
@@ -104,14 +107,4 @@ func (w WeekSet) Swap(i, j int) {
 }
 func (w WeekSet) Less(i, j int) bool {
 	return w[i].Date.Before(w[j].Date)
-}
-
-func (w Week) Len() int {
-	return len(w.Movies)
-}
-func (w Week) Swap(i, j int) {
-	w.Movies[i], w.Movies[j] = w.Movies[j], w.Movies[i]
-}
-func (w Week) Less(i, j int) bool {
-	return w.Movies[i].Rank < w.Movies[j].Rank
 }
