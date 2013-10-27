@@ -29,13 +29,13 @@ func (c App) Faq() revel.Result {
 }
 
 func getModel() (home models.Home) {
-	home = models.Home{CurrentWeek: models.CurrentWeek, AllWeeks: models.Weeks, Stats: calculateStats(), AppVersion: app.Version}
+	home = models.Home{CurrentWeek: models.CurrentWeek, AllWeeks: models.AllWeeks, Stats: calculateStats(), AppVersion: app.Version}
 	return
 }
 
 func calculateStats() models.Stats {
 	var digital, rentStream, streaming, n int
-	for _, w := range models.Weeks {
+	for _, w := range models.AllWeeks {
 		for _, m := range w.Movies {
 			if m.Streaming > 0 {
 				streaming++
@@ -49,7 +49,7 @@ func calculateStats() models.Stats {
 			n++
 		}
 	}
-	nWeeks := len(models.Weeks)
+	nWeeks := len(models.AllWeeks)
 	digital = int(100 * digital / n)
 	rentStream = int(100 * rentStream / n)
 	streaming = int(100 * streaming / n)

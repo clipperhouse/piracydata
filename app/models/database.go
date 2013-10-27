@@ -6,14 +6,11 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"sort"
 	"time"
 )
 
-type WeekSet []*Week
-
 var CurrentWeek *Week
-var Weeks []*Week
+var AllWeeks Weeks
 
 func openDb() *sql.DB {
 	connection := os.Getenv("DATABASE_URL")
@@ -37,7 +34,7 @@ func GetDbMap() (dbmap *gorp.DbMap) {
 func LoadAllWeeks() {
 	log.Println("Starting LoadAllWeeks")
 
-	var weeks []*Week
+	var weeks Weeks
 
 	dbmap := GetDbMap()
 	db := dbmap.Db
@@ -87,10 +84,8 @@ func LoadAllWeeks() {
 		week.Summarize()
 		weeks = append(weeks, week)
 	}
-	// add sorting
-	sort.Sort(WeekSet(weeks))
-	Weeks = weeks
-	CurrentWeek = Weeks[len(Weeks)-1]
+	AllWeeks = weeks.Sort(by_date)
+	CurrentWeek = AllWeeks[len(AllWeeks)-1]
 	return
 }
 
@@ -98,13 +93,6 @@ var by_rank = func(movies Movies, a, b int) bool {
 	return movies[a].Rank < movies[b].Rank
 }
 
-// sorting functions
-func (w WeekSet) Len() int {
-	return len(w)
-}
-func (w WeekSet) Swap(i, j int) {
-	w[i], w[j] = w[j], w[i]
-}
-func (w WeekSet) Less(i, j int) bool {
-	return w[i].Date.Before(w[j].Date)
+var by_date = func(weeks Weeks, a, b int) bool {
+	return weeks[a].Date.Before(weeks[b].Date)
 }
