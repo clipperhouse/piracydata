@@ -8,7 +8,7 @@ type Week struct {
 	Id         int       `db:"id"`
 	IsApproved bool      `db:"is_approved"`
 	Date       time.Time `db:"date"`
-	Movies     []*Movie  `db:"-"` // ignore, calculate at runtime
+	Movies     Movies    `db:"-"` // ignore, calculate at runtime
 	Streaming  int       `db:"-"` // ditto
 	Rental     int       `db:"-"` // ditto
 	Purchase   int       `db:"-"` // ditto

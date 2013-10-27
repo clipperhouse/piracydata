@@ -58,7 +58,7 @@ func LoadAllWeeks() {
 		panic(err)
 	}
 
-	var movies []*Movie
+	var movies Movies
 	dbmap.Select(&movies, "select * from movies")
 
 	for _, m := range movies {
@@ -81,11 +81,9 @@ func LoadAllWeeks() {
 	for _, d := range dates {
 		week := &Week{}
 		week.Date = d
-		for _, m := range movies {
-			if m.Week.Equal(d) {
-				week.Movies = append(week.Movies, m)
-			}
-		}
+		week.Movies = movies.Where(func(m *Movie) bool {
+			return m.Week.Equal(week.Date)
+		})
 		week.Summarize()
 		sort.Sort(week)
 		weeks = append(weeks, week)
