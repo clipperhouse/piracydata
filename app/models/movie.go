@@ -22,3 +22,7 @@ type Movie struct {
 func (movie *Movie) Summarize() {
 	movie.All = movie.Streaming + movie.Rental + movie.Purchase
 }
+
+func (movie *Movie) String() string {
+	return movie.Title
+}
